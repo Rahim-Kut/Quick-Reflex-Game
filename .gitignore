@@ -1,14 +1,10 @@
 *__pycache__
 *.py[cod]
 *.pyo
-
 *.db
-
-*.env
-
+.env
+venv/
 *.log
-
 *Thumbs.db
-
 .vscode/
 .idea/
