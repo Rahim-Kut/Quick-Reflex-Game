@@ -20,5 +20,9 @@ explorerhat.input.one.changed(beam_broken)
 
 print("Ready. Break the beam to trigger the buzzer.")
 
+
+#print("Reading input 1 every 0.5s...")
+
 while True:
+	#print("Input 1:", explorerhat.input.one.read())
 	time.sleep(1)
