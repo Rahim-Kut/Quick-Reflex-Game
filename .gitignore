@@ -8,3 +8,6 @@ venv/
 *Thumbs.db
 .vscode/
 .idea/
+current_game.json
+results/
+go_now.log
