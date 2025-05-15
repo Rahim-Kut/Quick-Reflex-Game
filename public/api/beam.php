@@ -1,6 +1,4 @@
 <?php
-// beam-broken.php
-// (no session_start(), no require_login())
 
 if (!isset($_POST['token'], $_POST['time_ms'])) {
     http_response_code(400);
@@ -11,7 +9,7 @@ $token   = preg_replace('/\D/', '', $_POST['token']);  // strip non-digits
 $time_ms = (int) $_POST['time_ms'];
 
 // ensure results folder exists
-$dir = __DIR__ . '/results';
+$dir = __DIR__ . '/../results';
 if (!is_dir($dir)) {
     mkdir($dir, 0755, true);
 }

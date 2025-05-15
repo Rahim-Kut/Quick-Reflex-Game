@@ -1,7 +1,6 @@
 <?php
-// go-now.php
 session_start();
-require_once 'includes/auth.php';
+require_once __DIR__ . '/../../includes/auth.php';
 require_login();
 
 if (!isset($_POST['token'])) {
@@ -10,7 +9,7 @@ if (!isset($_POST['token'])) {
 }
 
 $tk = preg_replace('/\D/', '', $_POST['token']);
-$dir = __DIR__ . '/results';
+$dir = __DIR__ . '/../results';
 if (!is_dir($dir)) mkdir($dir, 0777, true);
 
 // write the “.go” flag

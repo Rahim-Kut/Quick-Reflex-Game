@@ -1,5 +1,5 @@
 <?php
-require 'includes/db.php';
+require __DIR__ . '/../includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $u = trim($_POST['username'] ?? '');

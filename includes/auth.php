@@ -24,7 +24,7 @@ function is_admin()
 function require_login()
 {
     if (!user()) {
-        header('Location: login.php?next=' . urlencode($_SERVER['REQUEST_URI']));
+        header('Location: /login.php?next=' . urlencode($_SERVER['REQUEST_URI']));
         exit;
     }
 }

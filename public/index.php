@@ -1,13 +1,14 @@
 <?php
-require_once 'includes/db.php';
-require_once 'includes/auth.php';
+require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/../includes/auth.php';
 $rows = db()->query("SELECT id,player,time_ms,played_at From game_history ORDER BY id DESC LIMIT 30")->fetchAll(PDO::FETCH_ASSOC);
 
 $rows = db()->query("SELECT id,player,time_ms,played_at From game_history ORDER BY id DESC LIMIT 30")->fetchAll(PDO::FETCH_ASSOC);
 
 $resultsDir = __DIR__.'/results';
-array_map('unlink', glob("$resultsDir/*.go"));
-
+foreach (glob("$resultsDir/*.{go,json}", GLOB_BRACE) as $file){
+    unlink($file);
+}
 ?>
 
 <!doctype html>
@@ -26,6 +27,9 @@ array_map('unlink', glob("$resultsDir/*.go"));
     if (user()): ?>
         Logged in as <?= htmlspecialchars(user()['username']) ?> |
         <a href="logout.php">Logout</a>
+        <?php if (is_admin()): ?>
+            <a href="manage_users.php">Manage users</a
+            <?php endif; ?>
         <br><br>
         <button id="startBtn">Start</button>
         <button id="restartBtn" style="display:none">↻ Play again</button>
@@ -55,7 +59,7 @@ array_map('unlink', glob("$resultsDir/*.go"));
                     <td><?= $r['time_ms'] ?> ms</td>
                     <td><?= $r['played_at'] ?></td>
                     <?php if (is_admin()): ?>
-                        <td class="admin"><a href="delete-score.php?id=<?= $r['id'] ?>">🗑</a></td>
+                        <td class="admin"><a href="delete.php?id=<?= $r['id'] ?>">🗑</a></td>
                     <?php endif; ?>
                 </tr>
             <?php endforeach ?>

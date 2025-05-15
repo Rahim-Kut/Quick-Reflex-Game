@@ -1,5 +1,4 @@
 <?php
-// Usage: require_once __DIR__.'/includes/db.php'; $pdo = db();
 function db(): PDO
 {
     static $pdo;

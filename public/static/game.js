@@ -19,11 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   startBtn.onclick = async () => {
     startBtn.disabled = true;
-    const r = await fetch("api-start.php", { method: "POST" });
+    const r = await fetch("api/start.php", { method: "POST" });
     const j = await r.json();
     token = j.token;
     setTimeout(() => {
-      fetch("go-now.php", {
+      fetch("api/go.php", {
         method: "POST",
         body: new URLSearchParams({ token }),
       }).catch(console.error);
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function saveScore(e) {
   e.preventDefault();
   const data = new URLSearchParams(new FormData(formEl));
-  const res = await fetch("record-game.php", { method: "POST", body: data });
+  const res = await fetch("api/record.php", { method: "POST", body: data });
   if (!res.ok) {
     alert("Save failed: " + (await res.text()));
     return;

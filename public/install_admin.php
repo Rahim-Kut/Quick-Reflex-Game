@@ -1,5 +1,5 @@
 <?php
-require 'includes/db.php';
+require __DIR__ . '/../includes/db.php';
 $pdo = db();
 
 $adminHash = password_hash('admin123', PASSWORD_BCRYPT);
