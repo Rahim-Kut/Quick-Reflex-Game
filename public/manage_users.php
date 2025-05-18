@@ -22,44 +22,63 @@ $users = db()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
-    <title>Manage Users</title>
+    <title>Manage Users – Quick Reflex</title>
     <link rel="stylesheet" href="static/style.css">
 </head>
+
 <body>
-    <h1>Manage Users</h1
-    <p><a href="index.php">Back to Game</a></p>
-    <table>
-        <tr>
-            <th>#</th>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Games Played</th>
-            <th>Best Time</th>
-            <th>Average Time</th>
-            <th>Actions</th>
-        </tr>
-        <?php foreach ($users as $i => $u): ?>
+    <header>
+        <h1>Quick Reflex</h1>
+        <nav>
+            <a href="index.php">Game</a>
+            <a href="settings.php">Settings</a>
+            <a href="logout.php">Logout</a>
+        </nav>
+    </header>
+
+    <div class="card">
+        <h2>Manage Users</h2>
+        <table>
             <tr>
-                <td><?= $i + 1 ?></td>
-                <td><?= htmlspecialchars($u['username']) ?></td>
-                <td><?= htmlspecialchars($u['role']) ?></td>
-                <td><?= $u['games_played'] ?></td>
-                <td><?= $u['best_time'] ?? '—' ?></td>
-                <td><?= $u['avg_time'] ?? '—' ?></td>
-                <td>
-                    <?php if ($u['id'] != user()['id']): ?>
-                        <a
-                            href="delete_user.php?id=<?= $u['id'] ?>"
-                            onclick="return confirm('Delete user <?= htmlspecialchars($u['username']) ?> and all their games?');"
-                            >🗑 Delete</a>
-                    <?php else: ?>
-                        (you)
-                    <?php endif; ?>
-                </td>
+                <th>#</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Games Played</th>
+                <th>Best Time</th>
+                <th>Average Time</th>
+                <th>Actions</th>
             </tr>
-        <?php endforeach; ?>
-    </table>
+            <?php foreach ($users as $i => $u): ?>
+                <tr>
+                    <td><?= $i + 1 ?></td>
+                    <td><?= htmlspecialchars($u['username']) ?></td>
+                    <td><?= htmlspecialchars($u['role']) ?></td>
+                    <td><?= $u['games_played'] ?></td>
+                    <td><?= $u['best_time']  ?? '—' ?></td>
+                    <td><?= $u['avg_time']   ?? '—' ?></td>
+                    <td>
+                        <?php if ($u['id'] != user()['id']): ?>
+                            <a
+                                href="delete_user.php?id=<?= $u['id'] ?>"
+                                onclick="return confirm(
+                  'Delete user <?= htmlspecialchars($u['username']) ?> and all their games?'
+                );"
+                                class="btn"
+                                style="background:#f87171;color:#fff;padding:4px 8px;font-size:.9rem;display:flex;align-items:center;gap:4px;">
+                                <span aria-hidden="true">🗑</span> <span>Delete</span>
+                            </a>
+                        <?php else: ?>
+                            <span style="opacity:.6">you</span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+
 </body>
+
 </html>

@@ -25,9 +25,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $err = "Wrong credentials";
 }
 ?>
-<form method="post">
-    User <input name="username"><br>
-    Password <input type="password" name="password"><br>
-    <button>Login</button>
-    <?= isset($err) ? "<p style='color:red'>$err</p>" : "" ?>
-</form>
+
+<!doctype html>
+<html>
+<meta charset="utf-8">
+<title>Login - Quick Reflex</title>
+<link rel="stylesheet" href="static/style.css">
+</head>
+
+<header>
+    <h1>Quick Reflex</h1>
+</header>
+
+<body>
+
+    <div class="card" style="max-width: 400px; margin: auto;">
+        <h2>Login</h2>
+        <?php if (!empty($err)): ?>
+            <p style="color:#f87171"><?= htmlspecialchars($err) ?></p>
+        <?php endif; ?>
+        <form method="post">
+            <label>User</label><br>
+            <input type="text" name="username" required style="width:100%; padding:8px; margin:6px 0;"><br>
+            <label>Password</label><br>
+            <input type="password" name="password" required style="width:100%; padding:8px; margin:6px 0;"><br>
+            <button class="btn" type="submit">Login</button>
+        </form>
+        <p style="margin-top:12px; font-size:0.9rem;">
+            No account? <a href="register.php" style="color:var(--accent1)">Register here</a>.
+        </p>
+    </div>
+
+</body>
+
+</html>

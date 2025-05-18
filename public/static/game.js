@@ -4,33 +4,72 @@ let token = null,
   resultDiv,
   formEl,
   timeIn,
-  restartBtn;
+  restartBtn,
+  statusMessage;
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("game.js DOMContentLoaded fired");
+
   startBtn = document.getElementById("startBtn");
   goDiv = document.getElementById("go");
   resultDiv = document.getElementById("result");
   formEl = document.getElementById("saveForm");
   timeIn = document.getElementById("time_ms");
   restartBtn = document.getElementById("restartBtn");
-  restartBtn.onclick = () => {
-    window.location.reload();
-  };
+  statusMessage = document.getElementById("statusMessage");
 
-  startBtn.onclick = async () => {
-    startBtn.disabled = true;
-    const r = await fetch("api/start.php", { method: "POST" });
-    const j = await r.json();
-    token = j.token;
-    setTimeout(() => {
-      fetch("api/go.php", {
-        method: "POST",
-        body: new URLSearchParams({ token }),
-      }).catch(console.error);
-      goDiv.style.display = "block";
-      pollBeam(); // start polling once GO! is visible
-    }, j.delay * 1000);
-  };
+  if (restartBtn) {
+    restartBtn.onclick = () => window.location.reload();
+  }
+
+  if (startBtn) {
+    startBtn.onclick = async () => {
+      startBtn.disabled = true;
+      if (statusMessage) {
+        statusMessage.textContent = "Get ready...";
+        statusMessage.classList.remove("hidden");
+      }
+
+      const r = await fetch("api/start.php", { method: "POST" });
+      const j = await r.json();
+      token = j.token;
+      setTimeout(async () => {
+        fetch("api/go.php", {
+          method: "POST",
+          body: new URLSearchParams({ token }),
+        }).catch(console.error);
+        goDiv.style.display = "block";
+        pollBeam(); // start polling once GO! is visible
+        if (statusMessage) {
+          statusMessage.classList.add("hidden");
+          statusMessage.textContent = "";
+        }
+      }, j.delay * 1000);
+    };
+  }
+
+  async function checkDevice() {
+    console.log("checkDevice() running");
+    try {
+      let res = await fetch("heartbeat.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("bad status" + res.status);
+      let { ts } = await res.json();
+      let age = Date.now() / 1000 - ts;
+
+      // DEBUG: log what we got
+      console.log("Heartbeat ts=", ts, "age=", age);
+      let el = document.getElementById("ds-text");
+
+      if (age < 15) el.textContent = "🟢 Online";
+      else if (age < 30) el.textContent = "🔶 Slow/lagging";
+      else el.textContent = "🔴 Offline";
+    } catch {
+      document.getElementById("ds-text").textContent = "⚠️ Error";
+    }
+  }
+  // check loop
+  setInterval(checkDevice, 5000);
+  checkDevice();
 });
 
 async function saveScore(e) {
@@ -60,10 +99,23 @@ async function pollBeam() {
 }
 
 function beamBroken(ms) {
+  if (ms < 100) {
+    alert("Oops-your time was inhumanly fast! (" + ms + "ms). Try again!");
+    window.location.reload();
+    return;
+  }
+  if (statusMessage) {
+    statusMessage.classList.add("hidden");
+    statusMessage.textContent = "";
+  }
+
   goDiv.style.display = "none";
   resultDiv.textContent = `Your time: ${ms} ms`;
   timeIn.value = ms;
   formEl.style.display = "block";
+
+  if (startBtn) startBtn.style.display = "none";
+  if (restartBtn) restartBtn.style.display = "inline-block";
+
   token = null;
-  restartBtn.style.display = "inline-block";
 }

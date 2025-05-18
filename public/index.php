@@ -5,8 +5,8 @@ $rows = db()->query("SELECT id,player,time_ms,played_at From game_history ORDER 
 
 $rows = db()->query("SELECT id,player,time_ms,played_at From game_history ORDER BY id DESC LIMIT 30")->fetchAll(PDO::FETCH_ASSOC);
 
-$resultsDir = __DIR__.'/results';
-foreach (glob("$resultsDir/*.{go,json}", GLOB_BRACE) as $file){
+$resultsDir = __DIR__ . '/results';
+foreach (glob("$resultsDir/*.{go,json}", GLOB_BRACE) as $file) {
     unlink($file);
 }
 ?>
@@ -17,41 +17,56 @@ foreach (glob("$resultsDir/*.{go,json}", GLOB_BRACE) as $file){
 <head>
     <title>Quick Reflex</title>
     <link rel="stylesheet" href="static/style.css">
-    <script src="static/game.js"></script>
+    <script defer src="static/game.js"></script>
 </head>
 
 <body>
-    <h1>Quick Reflex</h1>
-
-    <?php
-    if (user()): ?>
-        Logged in as <?= htmlspecialchars(user()['username']) ?> |
-        <a href="logout.php">Logout</a>
-        <?php if (is_admin()): ?>
-            <a href="manage_users.php">Manage users</a
+    <header>
+        <h1>Quick Reflex</h1>
+        <nav>
+            <?php if (user()): ?>
+                <span>Hi <?= htmlspecialchars(user()['username']) ?></span>
+                <a href="logout.php">Logout</a>
+                <?php if (is_admin()): ?>
+                    <a href="manage_users.php">Users</a>
+                    <a href="settings.php">Settings</a>
+                <?php endif; ?>
+            <?php else: ?>
+                <a href="login.php">Login</a>
+                <a href="register.php">Register</a>
             <?php endif; ?>
-        <br><br>
-        <button id="startBtn">Start</button>
-        <button id="restartBtn" style="display:none">↻ Play again</button>
+        </nav>
+    </header>
 
-        <?php
-    else: ?>
-            <a href="login.php">Login</a>
-            <a href="register.php">Register</a>
-        <?php endif; ?>
+    <div id="device-status">
+        Device status: <span id="ds-text">checking…</span>
+    </div>
 
-        <div id="go">GO!</div>
-        <div id="result"></div>
+    <?php if (user()): ?>
+        <button id="startBtn" class="btn">Start</button>
+        <button id="restartBtn" class="btn" style="display:none">↻ Play Again</button>
 
-        <form id="saveForm" style="display:none" onsubmit="saveScore(event)">
-            <input type="hidden" id="time_ms" name="time_ms">
-            <button>Save</button>
-        </form>
+        <div id="statusMessage" class="status-message"></div>
+    <?php endif; ?>
 
+    <div id="go">GO!</div>
+    <div id="result"></div>
+
+    <form id="saveForm" style="display:none" onsubmit="saveScore(event)">
+        <input type="hidden" id="time_ms" name="time_ms">
+        <button type="submit" class="btn">Save Score</button>
+    </form>
+
+    <div class="card">
         <h2>Hall of Fame</h2>
         <table>
-            <?php if (is_admin()) echo '<th>Admin</th>'; ?>
-
+            <tr>
+                <th>#</th>
+                <th>Player</th>
+                <th>Time</th>
+                <th>Date</th>
+                <?php if (is_admin()) echo '<th>Admin</th>'; ?>
+            </tr>
             <?php foreach ($rows as $i => $r): ?>
                 <tr>
                     <td><?= $i + 1 ?></td>
@@ -59,11 +74,13 @@ foreach (glob("$resultsDir/*.{go,json}", GLOB_BRACE) as $file){
                     <td><?= $r['time_ms'] ?> ms</td>
                     <td><?= $r['played_at'] ?></td>
                     <?php if (is_admin()): ?>
-                        <td class="admin"><a href="delete.php?id=<?= $r['id'] ?>">🗑</a></td>
+                        <td class="admin"><a href="delete_user.php?id=<?= $r['id'] ?>">🗑</a></td>
                     <?php endif; ?>
                 </tr>
-            <?php endforeach ?>
+            <?php endforeach; ?>
         </table>
+    </div>
+
 </body>
 
 </html>
