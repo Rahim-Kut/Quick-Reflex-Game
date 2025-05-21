@@ -4,16 +4,15 @@ require_once __DIR__ . '/../includes/auth.php';
 require_admin();
 
 $sql = <<<SQL
-SELECT
-u.id,
-u.username,
-u.role,
-count(g.id) AS games_played,
-COALESCE(MIN(g.time_ms), NULL) AS best_time,
-COALESCE(ROUND(AVG(g.time_ms), 2), NULL) AS avg_time
+SELECT 
+  u.id,
+  u.username,
+  u.role,
+  COUNT(pl.id)            AS games_played,
+  MIN(pl.time_ms)         AS best_time,
+  ROUND(AVG(pl.time_ms),2) AS avg_time
 FROM users u
-LEFT JOIN game_history g
-on g.player = u.username
+LEFT JOIN plays pl ON pl.user_id = u.id
 GROUP BY u.id, u.username, u.role
 ORDER BY u.username
 SQL;
@@ -60,19 +59,23 @@ $users = db()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                     <td><?= $u['best_time']  ?? '—' ?></td>
                     <td><?= $u['avg_time']   ?? '—' ?></td>
                     <td>
-                        <?php if ($u['id'] != user()['id']): ?>
+                        <div class="action-buttons">
                             <a
-                                href="delete_user.php?id=<?= $u['id'] ?>"
+                                href="clear-plays.php?id=<?= $u['id'] ?>"
                                 onclick="return confirm(
+                                    'Remove ALL play records for <?= htmlspecialchars($u['username']) ?>?'
+                                );"
+                                class="btn btn-small btn-clear">Clear Plays</a>
+                            <?php if ($u['id'] != user()['id']): ?>
+                                <a
+                                    href="delete_user.php?id=<?= $u['id'] ?>"
+                                    onclick="return confirm(
                   'Delete user <?= htmlspecialchars($u['username']) ?> and all their games?'
                 );"
-                                class="btn"
-                                style="background:#f87171;color:#fff;padding:4px 8px;font-size:.9rem;display:flex;align-items:center;gap:4px;">
-                                <span aria-hidden="true">🗑</span> <span>Delete</span>
-                            </a>
-                        <?php else: ?>
-                            <span style="opacity:.6">you</span>
-                        <?php endif; ?>
+                                    class="btn btn-small btn-delete">🗑Delete
+                                </a>
+                            <?php endif; ?>
+                        </div>
                     </td>
                 </tr>
             <?php endforeach; ?>

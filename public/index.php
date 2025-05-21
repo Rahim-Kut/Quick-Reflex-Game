@@ -74,7 +74,7 @@ foreach (glob("$resultsDir/*.{go,json}", GLOB_BRACE) as $file) {
                     <td><?= $r['time_ms'] ?> ms</td>
                     <td><?= $r['played_at'] ?></td>
                     <?php if (is_admin()): ?>
-                        <td class="admin"><a href="delete_user.php?id=<?= $r['id'] ?>">🗑</a></td>
+                        <td class="admin"><a href="delete.php?id=<?= $r['id'] ?>">🗑</a></td>
                     <?php endif; ?>
                 </tr>
             <?php endforeach; ?>

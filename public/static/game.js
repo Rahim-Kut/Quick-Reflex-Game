@@ -60,9 +60,16 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Heartbeat ts=", ts, "age=", age);
       let el = document.getElementById("ds-text");
 
-      if (age < 15) el.textContent = "🟢 Online";
-      else if (age < 30) el.textContent = "🔶 Slow/lagging";
-      else el.textContent = "🔴 Offline";
+      if (age < 15) {
+        el.textContent = "🟢 Online";
+        startBtn.disabled = false;
+        startBtn.classList.remove("disabled");
+      } 
+      else {
+        startBtn.disabled = true;
+        startBtn.classList.add("disabled");
+        el.textContent = "🔴 Offline"; 
+      } 
     } catch {
       document.getElementById("ds-text").textContent = "⚠️ Error";
     }
@@ -104,11 +111,21 @@ function beamBroken(ms) {
     window.location.reload();
     return;
   }
+
   if (statusMessage) {
     statusMessage.classList.add("hidden");
     statusMessage.textContent = "";
   }
 
+
+  fetch("api/record-play.php", {
+    method: "POST",
+    body: new URLSearchParams({ time_ms: ms }),
+  }).catch(() => {
+    /* ignore */
+  })
+
+  
   goDiv.style.display = "none";
   resultDiv.textContent = `Your time: ${ms} ms`;
   timeIn.value = ms;
