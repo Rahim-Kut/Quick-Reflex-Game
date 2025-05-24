@@ -8,8 +8,6 @@ let token = null,
   statusMessage;
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("game.js DOMContentLoaded fired");
-
   startBtn = document.getElementById("startBtn");
   goDiv = document.getElementById("go");
   resultDiv = document.getElementById("result");
@@ -56,20 +54,19 @@ document.addEventListener("DOMContentLoaded", () => {
       let { ts } = await res.json();
       let age = Date.now() / 1000 - ts;
 
-      // DEBUG: log what we got
-      console.log("Heartbeat ts=", ts, "age=", age);
+      console.log("Heartbeat ts=", ts, "age=", age); // DEBUG
+
       let el = document.getElementById("ds-text");
 
       if (age < 15) {
         el.textContent = "🟢 Online";
         startBtn.disabled = false;
         startBtn.classList.remove("disabled");
-      } 
-      else {
+      } else {
         startBtn.disabled = true;
         startBtn.classList.add("disabled");
-        el.textContent = "🔴 Offline"; 
-      } 
+        el.textContent = "🔴 Offline";
+      }
     } catch {
       document.getElementById("ds-text").textContent = "⚠️ Error";
     }
@@ -87,20 +84,17 @@ async function saveScore(e) {
     alert("Save failed: " + (await res.text()));
     return;
   }
-  // on success we reload
   location.reload();
 }
 
-// Called after GO! is displayed:
-// keep trying to fetch results/<token>.json until it appears
+// Called after GO! is displayed, keep trying to fetch results/<token>.json until it appears
 async function pollBeam() {
   try {
     let res = await fetch(`results/${token}.json`, { cache: "no-store" });
     if (!res.ok) throw new Error("not ready");
     let j = await res.json();
-    beamBroken(j.time_ms); // show result, hide GO!, show form
+    beamBroken(j.time_ms);
   } catch (e) {
-    //  network error or 404 → not ready yet
     setTimeout(pollBeam, 200);
   }
 }
@@ -117,15 +111,13 @@ function beamBroken(ms) {
     statusMessage.textContent = "";
   }
 
-
   fetch("api/record-play.php", {
     method: "POST",
     body: new URLSearchParams({ time_ms: ms }),
   }).catch(() => {
-    /* ignore */
-  })
+    // ignore
+  });
 
-  
   goDiv.style.display = "none";
   resultDiv.textContent = `Your time: ${ms} ms`;
   timeIn.value = ms;

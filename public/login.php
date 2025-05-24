@@ -11,11 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->execute([$u]);
     $user = $stmt->fetch();
 
-    // debug
-    //var_dump($user);
-    //var_dump(password_verify($p, $user['password_hash'] ?? ''));
-    //exit;
-
 
     if ($user && password_verify($p, $user['password_hash'])) {
         $_SESSION['user'] = ['id' => $user['id'], 'username' => $user['username'], 'role' => $user['role']];

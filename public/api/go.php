@@ -12,10 +12,8 @@ $tk = preg_replace('/\D/', '', $_POST['token']);
 $dir = __DIR__ . '/../results';
 if (!is_dir($dir)) mkdir($dir, 0777, true);
 
-// write the “.go” flag
 file_put_contents("$dir/$tk.go", "GO");
 
-// clean up the JSON so Pi never re-arms on it
 $current = __DIR__ . '/current_game.json';
 if (file_exists($current)) unlink($current);
 

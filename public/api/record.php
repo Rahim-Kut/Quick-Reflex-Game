@@ -9,14 +9,11 @@ if (!isset($_POST['time_ms'])) {
     exit("need time_ms");
 }
 
-// grab the logged‐in user’s name from the session
 $user = user()['username'];
 $time_ms = (int) $_POST['time_ms'];
 
-// insert into the database
 db()->prepare(
     "INSERT INTO game_history (player, time_ms) VALUES (?, ?)"
 )->execute([$user, $time_ms]);
 
-// tell the client it worked
 echo "ok";

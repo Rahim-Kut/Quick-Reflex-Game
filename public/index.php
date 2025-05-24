@@ -45,7 +45,6 @@ foreach (glob("$resultsDir/*.{go,json}", GLOB_BRACE) as $file) {
     <?php if (user()): ?>
         <button id="startBtn" class="btn">Start</button>
         <button id="restartBtn" class="btn" style="display:none">↻ Play Again</button>
-
         <div id="statusMessage" class="status-message"></div>
     <?php endif; ?>
 
