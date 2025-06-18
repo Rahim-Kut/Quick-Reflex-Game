@@ -1,4 +1,5 @@
 <?php
+//  Quick-Reflex Game – Abdulrahim Kuteifan – DT514G VT25
 
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([

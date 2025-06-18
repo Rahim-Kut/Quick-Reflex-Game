@@ -1,6 +1,7 @@
 <?php
+//  Quick-Reflex Game – Abdulrahim Kuteifan – DT514G VT25
+
 require_once __DIR__ . '/../includes/auth.php';
-require_admin();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $on = isset($_POST['buzzer']);

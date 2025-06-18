@@ -1,8 +1,9 @@
 <?php
+//  Quick-Reflex Game – Abdulrahim Kuteifan – DT514G VT25
+
 require_once __DIR__ . '/../../includes/db.php';
 require_once __DIR__ . '/../../includes/auth.php';
 session_start();
-require_login();
 
 if (!isset($_POST['time_ms'])) {
     http_response_code(400);

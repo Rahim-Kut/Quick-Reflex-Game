@@ -1,3 +1,5 @@
+//  Quick-Reflex Game – Abdulrahim Kuteifan – DT514G VT25
+
 let token = null,
   startBtn,
   goDiv,
@@ -31,11 +33,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const r = await fetch("api/start.php", { method: "POST" });
       const j = await r.json();
       token = j.token;
+
       setTimeout(async () => {
         fetch("api/go.php", {
           method: "POST",
           body: new URLSearchParams({ token }),
         }).catch(console.error);
+
         goDiv.style.display = "block";
         pollBeam(); // start polling once GO! is visible
         if (statusMessage) {
@@ -60,11 +64,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (age < 15) {
         el.textContent = "🟢 Online";
+        if (startBtn) {
         startBtn.disabled = false;
         startBtn.classList.remove("disabled");
+        }
       } else {
-        startBtn.disabled = true;
-        startBtn.classList.add("disabled");
+        if (startBtn) {
+          startBtn.disabled = true;
+          startBtn.classList.add("disabled");
+        }
         el.textContent = "🔴 Offline";
       }
     } catch {
@@ -121,7 +129,7 @@ function beamBroken(ms) {
   goDiv.style.display = "none";
   resultDiv.textContent = `Your time: ${ms} ms`;
   timeIn.value = ms;
-  formEl.style.display = "block";
+  formEl.style.display = "block"; // Save button shown
 
   if (startBtn) startBtn.style.display = "none";
   if (restartBtn) restartBtn.style.display = "inline-block";

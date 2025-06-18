@@ -1,15 +1,17 @@
+#  Quick-Reflex Game – Abdulrahim Kuteifan – DT514G VT25
+
 import explorerhat, time, requests, json, threading
 
 PC_IP = "172.20.10.2"
 BASE = f"http://{PC_IP}/quick-reflex-game/"
 TOKEN_EP = BASE + "public/api/current_game.json"
 POST_EP = BASE + "public/api/beam.php"
+GO_EP = BASE + "public/results/{token}.go"
 
 token = None
 go_at = None # epoch time when GO! appears
 armed = False
 
-GO_EP = BASE + "public/results/{token}.go"
 
 def is_buzzer_enabled():
 	try:
@@ -35,13 +37,6 @@ def poll_token():
 				print("GO endpoint check", r.status_code)
 				
 				if r.status_code == 200:
-					# parse the JSON that install puts into <token>.go
-					#try:
-					#	data = r.json()
-					#	go_at = float(data.get('go_ts', time.time()))
-					#except ValueError:
-						# fallback if it isn't valid JSON
-					#	go_at = time.time()
 					go_at = time.time()
 					armed = True
 					print(f"GO! timer started at {go_at}")

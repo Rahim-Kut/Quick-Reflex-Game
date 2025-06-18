@@ -1,4 +1,5 @@
 <?php
+//  Quick-Reflex Game – Abdulrahim Kuteifan – DT514G VT25
 
 if (!isset($_POST['token'], $_POST['time_ms'])) {
     http_response_code(400);

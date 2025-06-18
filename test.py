@@ -1,3 +1,5 @@
+# Quick-Reflex Game – Abdulrahim Kuteifan – DT514G VT25
+
 import explorerhat
 import time
 

@@ -1,4 +1,6 @@
 <?php
+//  Quick-Reflex Game – Abdulrahim Kuteifan – DT514G VT25
+
 function db(): PDO
 {
     static $pdo;

@@ -1,4 +1,5 @@
-/* style.css */
+//  Quick-Reflex Game – Abdulrahim Kuteifan – DT514G VT25
+
 :root {
   --bg-top: #1e3a8a;
   --bg-bot: #3b82f6;
@@ -171,7 +172,7 @@ th {
   opacity: 0;
 }
 
-/* Action Biuttons in Manage Users page*/
+/* Action Buttons in manage msers page*/
 
 .btn-small {
   display: inline-flex;
